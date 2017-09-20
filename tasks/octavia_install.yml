@@ -33,14 +33,14 @@
       {% endfor %}
   when: octavia_developer_mode | bool
 
+# Modify so we get the Pike verison of Octavia
 - name: Install required pip packages
   pip:
-    name: "{{ octavia_requires_pip_packages }}"
+    name: "{{ octavia_requires_pip_packages | join(' ') }}"
     state: "{{ octavia_pip_package_state }}"
     extra_args: >-
       {{ octavia_developer_mode | ternary(pip_install_developer_constraints | default('--constraint /opt/developer-pip-constraints.txt'), '') }}
-      {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''),'') }}
-      {{ pip_install_options | default('') }}
+      {{ pip_install_options + ' --isolated' | default('--isolated') }}
   register: install_packages
   until: install_packages|success
   retries: 5
@@ -84,16 +84,16 @@
     - octavia_get_venv | changed or octavia_venv_dir | changed
   notify: Restart octavia services
 
+# Modify so we get the Pike verison of Octavia
 - name: Install pip packages
   pip:
-    name: "{{ octavia_pip_packages }}"
+    name: "{{ octavia_pip_packages | join(' ') }}"
     state: "{{ octavia_pip_package_state }}"
     virtualenv: "{{ octavia_bin | dirname }}"
     virtualenv_site_packages: "no"
     extra_args: >-
       {{ octavia_developer_mode | ternary(pip_install_developer_constraints | default('--constraint /opt/developer-pip-constraints.txt'), '') }}
-      {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''),'') }}
-      {{ pip_install_options | default('') }}
+      {{ pip_install_options + ' --isolated' | default('--isolated') }}
   register: install_packages
   until: install_packages|success
   retries: 5

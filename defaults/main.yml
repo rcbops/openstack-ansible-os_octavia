@@ -323,12 +323,6 @@ octavia_container_interface: "{{ octavia_provider_network.container_interface }}
 octavia_ip_tables_fw: True
 # The iptable rules
 octavia_iptables_rules:
-  - # Allow icmp
-    chain: INPUT
-    protocol: icmp
-    ctstate: NEW
-    icmp_type: 8
-    jump: ACCEPT
   - # Allow existing connections:
     chain: INPUT
     in_interface: "{{ octavia_container_interface }}"
