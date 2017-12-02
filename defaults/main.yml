@@ -168,7 +168,7 @@ octavia_pip_packages:
   - python-novaclient
   - python-openstackclient
   - python-octaviaclient
-  - octavia
+  - "git+{{ octavia_git_repo }}@{{ octavia_git_install_branch }}#egg=octavia"
   - uwsgi
 
 octavia_api_init_overrides: {}
