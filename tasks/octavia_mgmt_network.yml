@@ -30,7 +30,9 @@
     name: "{{ octavia_neutron_management_network_name }}"
     provider_network_type: "{{ octavia_provider_network_type }}"
     provider_physical_network: "{{ octavia_provider_network_name }}"
-  when: octavia_service_net_setup
+  when:
+    - octavia_service_net_setup
+    - inventory_hostname == groups['octavia_all'][0]
 
 - name: Ensure mgmt subnet exists
   os_subnet:
@@ -50,7 +52,9 @@
     name: "{{ octavia_neutron_management_network_name }}-subnet"
     cidr: "{{ octavia_management_net_subnet_cidr }}"
     enable_dhcp: "{{ octavia_management_net_dhcp }}"
-  when: octavia_service_net_setup
+  when:
+    - octavia_service_net_setup
+    - inventory_hostname == groups['octavia_all'][0]
 
 - name: Get neutron network
   os_networks_facts:
